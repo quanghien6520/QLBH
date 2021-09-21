@@ -37,7 +37,7 @@ class GoodsController extends Controller
         $goods->period = $datas['period'];
         $goods->save();
         return response()->json([
-            'success' => ($provider->save())?1:0
+            'success' => ($goods->save())?1:0
         ]);
     }
 
