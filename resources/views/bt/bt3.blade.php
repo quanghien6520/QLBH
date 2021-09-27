@@ -1,1 +1,7 @@
-bt1.blade.php
+@extends('layout.mainLayout')
+
+@section('title', 'Bai Tap 3')
+@section('content')
+	<div>
+	</div>
+@endsection
