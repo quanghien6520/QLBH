@@ -35,7 +35,13 @@ Route::group(['prefix' => 'bt-php'], function () {
   });
 
   Route::get('bai-5', function() {
-    return view('bt.bt5');
+    $arr = [
+      'name'=>'Quang Hien',
+      'birthdate' => '06/05/2000',
+      'job' => 'student'
+    ];
+    $json = json_encode($arr);
+    return view('bt.bt5',['json'=>$json]);
   });
 });
 
