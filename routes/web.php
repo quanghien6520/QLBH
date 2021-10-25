@@ -17,6 +17,12 @@ Route::get('/', function () {
   return view('welcome');
 });
 
+Route::get('register', function () {
+  return view('pages.register');
+});
+
+Route::post('register-new','UserController@store')->name('register');
+
 Route::group(['prefix' => 'bt-php'], function () {
   Route::get('bai-1', function() {
     return view('bt.bt1');

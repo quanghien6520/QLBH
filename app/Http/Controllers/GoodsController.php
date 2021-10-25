@@ -49,8 +49,50 @@ class GoodsController extends Controller
     public function get(Request $request)
     {
         $allGoods= goods::all();
+        $resArray = [];
+        foreach($allGoods as $goods) {
+            $nestData = [
+                'id' => $goods->id,
+                'name' => $goods->name,
+                'subtitle' => $goods->unit,
+                'price' => number_format($goods->price)
+            ];
+            $resArray[] = $nestData;
+        }
         return response()->json([
-            'allGoods' => $allGoods
+            'allGoods' => $resArray
+        ]);
+    }
+
+    public function getSearch(Request $request) {
+        $datas = $request->all();
+        $allGoods= goods::where('name','like','%'.$datas['search'].'%')->get();
+        $resArray = [];
+        foreach($allGoods as $goods) {
+            $nestData = [
+                'id' => $goods->id,
+                'name' => $goods->name,
+                'subtitle' => $goods->unit,
+                'price' => number_format($goods->price)
+            ];
+            $resArray[] = $nestData;
+        }
+        return response()->json([
+            'allGoods' => $resArray
+        ]);
+    }
+
+    public function show(Request $request, $id) {
+        $datas = $request->all();
+        $goods = goods::find($id);
+        $nestData = [
+            'id' => $goods->id,
+            'name' => $goods->name,
+            'subtitle' => $goods->unit,
+            'price' => number_format($goods->price)
+        ];
+        return response()->json([
+            'goods' => $nestData
         ]);
     }
 }

@@ -11,8 +11,18 @@ class UserController extends Controller
 {
 	public function get() {
 		$allUser = User::all();
+		$result = [];
+		foreach ($allUser as $user) {
+			$nestedData = [
+				'id' => $user->id,
+				'name' => $user->name,
+				'subtitle' => $user->email,
+				'avatarUrl' => ''
+			];
+			$result[] = $nestedData;
+		}
 		return response()->json([
-			'allUser' => $allUser,
+			'allUser' => $result,
 		]);
 	}
 
@@ -21,6 +31,16 @@ class UserController extends Controller
 	}
 
 	public function login(Request $request) {
+		$datas = $request->all();
+		// if ($datas['email'] == 'admin@gmail.com' && $datas['password'] == '123456') {
+		// 	return response()->json([
+		// 		'login' => '1'
+		// 	]);
+		// } else {
+		// 	return response()->json([
+		// 		'login' => '0'
+		// 	]);
+		// }
 		$validation = Validator::make($request->all(),[ 
 			'email' => 'required|email',
 			'password' => 'required|string',
@@ -35,8 +55,9 @@ class UserController extends Controller
 		if (!$token = auth()->attempt($credentials)) {
 			return response()->json(['error' => 'Unauthorized'], 401);
 		}
+		$user = $request->user();
 		return response()->json([
-			'token' => csrf_token(),
+			'login' => '1'
 		]);
 	}
 

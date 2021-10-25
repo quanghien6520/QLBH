@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BuyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,12 +35,16 @@ Route::group(['prefix' => 'provider'], function () {
 
 Route::group(['prefix' => 'goods'], function () {
   Route::post('store', 'GoodsController@store');
+  Route::get('detail/{id}', 'GoodsController@show');
   Route::post('update/{id}', 'GoodsController@update');
   Route::post('destroy/{id}', 'GoodsController@destroy');
   Route::get('get', 'GoodsController@get');
+  Route::post('search', 'GoodsController@getSearch');
+
 });
 
 Route::group(['prefix' => 'buy'], function () {
+  Route::post('search-import','BuyController@search');
   Route::post('store', 'BuyController@store');
   Route::post('update/{id}', 'BuyController@update');
   Route::post('destroy/{id}', 'BuyController@destroy');
