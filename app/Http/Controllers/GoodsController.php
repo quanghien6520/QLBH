@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\goods;
+use Illuminate\Support\Facades\DB;
 
 class GoodsController extends Controller
 {
@@ -69,11 +70,13 @@ class GoodsController extends Controller
         $allGoods= goods::where('name','like','%'.$datas['search'].'%')->get();
         $resArray = [];
         foreach($allGoods as $goods) {
+            $Amount= DB::table('totalamount')->where('id',$goods->id)->value('Amount');
             $nestData = [
                 'id' => $goods->id,
                 'name' => $goods->name,
                 'subtitle' => $goods->unit,
-                'price' => number_format($goods->price)
+                'price' => number_format($goods->price),
+                'amount' => $Amount
             ];
             $resArray[] = $nestData;
         }
@@ -85,14 +88,20 @@ class GoodsController extends Controller
     public function show(Request $request, $id) {
         $datas = $request->all();
         $goods = goods::find($id);
+        $Amount= DB::table('totalamount')->where('id',$goods->id)->value('Amount');
         $nestData = [
             'id' => $goods->id,
             'name' => $goods->name,
             'subtitle' => $goods->unit,
-            'price' => number_format($goods->price)
+            'price' => number_format($goods->price),
+            'amount' => $Amount
         ];
         return response()->json([
             'goods' => $nestData
         ]);
+    }
+
+    public function test() {
+        dd(DB::table('totalamount')->where('id',11)->first());
     }
 }

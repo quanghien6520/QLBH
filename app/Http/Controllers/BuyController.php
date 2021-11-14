@@ -6,16 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\buy;
 use App\Models\goods;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
 
 class BuyController extends Controller
 {
     public function store(Request $request)
     {
         $datas = $request->all();
-        $bill = '0';
+        $bill = Str::uuid()->toString();
         foreach ($datas as $value) {
             $buy = new buy();
-            $buy->id_goods = $value['id_goods'];
+            $buy->id_goods = $value['id'];
             $buy->id_user = '1';
             $buy->amount = $value['number'];
             $buy->id_bill = $bill;

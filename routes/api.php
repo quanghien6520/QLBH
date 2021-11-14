@@ -53,6 +53,7 @@ Route::group(['prefix' => 'buy'], function () {
 
 Route::group(['prefix' => 'sell'], function () {
   Route::post('store', 'SellController@store');
+  Route::post('search','SellController@getSearch');
   Route::post('update/{id}', 'SellController@update');
   Route::post('destroy/{id}', 'SellController@destroy');
   Route::get('get', 'SellController@get');
