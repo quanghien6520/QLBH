@@ -22,6 +22,7 @@ Route::get('register', function () {
 });
 
 Route::post('register-new','UserController@store')->name('register');
+Route::get('test','GoodsController@test');
 
 Route::group(['prefix' => 'bt-php'], function () {
   Route::get('bai-1', function() {
