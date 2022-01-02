@@ -35,7 +35,7 @@ Route::group(['prefix' => 'provider'], function () {
 
 Route::group(['prefix' => 'goods'], function () {
   Route::post('store', 'GoodsController@store');
-  Route::get('detail/{id}', 'GoodsController@show');
+  Route::post('detail', 'GoodsController@show');
   Route::post('update/{id}', 'GoodsController@update');
   Route::post('destroy/{id}', 'GoodsController@destroy');
   Route::get('get', 'GoodsController@get');
@@ -60,6 +60,7 @@ Route::group(['prefix' => 'sell'], function () {
 });
 
 Route::group(['prefix' => 'report'], function () {
+  Route::get('/', 'ReportController@index');
   Route::get('import', 'ReportController@getImport');
   Route::get('export', 'ReportController@getExport');
   Route::get('in-storage', 'ReportController@getStorage');
@@ -70,8 +71,9 @@ Route::get('csrf-token','UserController@getToken');
 Route::group(['prefix' => 'user'], function () {
   Route::post('login','UserController@login');
   Route::post('store','UserController@store');
-  Route::post('update/{id}','UserController@update');
+  Route::post('update','UserController@update');
   Route::post('update-password/{id}','UserController@updatePassword');
   Route::post('allow-user/{id}','UserController@allowUser');
   Route::get('get','UserController@get');
+  Route::post('detail','UserController@detail');
 });
