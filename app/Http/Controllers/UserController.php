@@ -60,26 +60,25 @@ class UserController extends Controller
 		$validation = Validator::make($request->all(),[ 
 			'email' => 'required|email|unique:users',
 			'name' => 'required|string',
-			'ic_no' => 'required|string',
-			'is_admin' => 'required',
+			'ic' => 'required|numeric',
 			'password' => 'required|string',
 			'c_password' => 'required|string|same:password',
-			'phone_number' => 'required|string|unique:users',
+			'phone' => 'required|string|unique:users,phone_number',
 		]);
 		if($validation->fails()){
-			return response()->json([
+			return [
 				'success' => 0,
 				'message' => $validation->messages()
-			]);
+			];
 		}
 		$datas = $request->all();
 		$user = new User();
 		$user->name = $datas['name'];
 		$user->email = $datas['email'];
-		$user->ic_no = $datas['ic_no'];
-		$user->is_admin = $datas['is_admin'];
+		$user->ic_no = $datas['ic'];
+		$user->is_admin ='1';
 		$user->password = bcrypt($datas['password']);
-		$user->phone_number = $datas['phone_number'];
+		$user->phone_number = $datas['phone'];
 		$user->save();
 		return response()->json([
 			'success' => $user->id
@@ -87,20 +86,19 @@ class UserController extends Controller
 	}
 
 	public function update(Request $request) {
-		// $validation = Validator::make($request->all(),[
-		// 	'email' => 'required|email|unique:users',
-		// 	'name' => 'required|string',
-		// 	'ic_no' => 'required|digits',
-		// 	'is_admin' => 'required',
-		// 	'phone_number' => 'required|string|unique:users',
+		$validation = Validator::make($request->all(),[
+			'email' => 'required|email',
+			'name' => 'required|string',
+			'ic' => 'required|numeric',
+			'phone' => 'required|string',
 
-		// ]);
-		// if($validation->fails()){
-		// 	return response()->json([
-		// 		'success' => 0,
-		// 		'message' => $validation->messages()
-		// 	]);
-		// }
+		]);
+		if($validation->fails()){
+			return response()->json([
+				'success' => 0,
+				'message' => $validation->messages()
+			]);
+		}
 		$datas = $request->all();
 		$user = User::find($datas['id']);
 		$user->name = $datas['name'];
@@ -151,12 +149,18 @@ class UserController extends Controller
 
 	public function detail(Request $request) {
 		$user = User::find($request->input('id'));
+		if(!$user) {
+			return [
+				'error' => 1,
+			];
+		}
 		return response()->json([
 			'name' => $user->name,
 			'email' => $user->email,
 			'phone' => $user->phone_number,
 			'ic' => $user->ic_no,
-			'avatar' => $user->avatar
+			'avatar' => $user->avatar,
+			'id' => $user->id
 		]);
 	}
 }
