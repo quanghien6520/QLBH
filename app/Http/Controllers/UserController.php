@@ -17,7 +17,7 @@ class UserController extends Controller
 				'id' => $user->id,
 				'name' => $user->name,
 				'subtitle' => $user->email,
-				'avatarUrl' => ''
+				'avatarUrl' => $user->avatar
 			];
 			$result[] = $nestedData;
 		}
@@ -32,15 +32,6 @@ class UserController extends Controller
 
 	public function login(Request $request) {
 		$datas = $request->all();
-		// if ($datas['email'] == 'admin@gmail.com' && $datas['password'] == '123456') {
-		// 	return response()->json([
-		// 		'login' => '1'
-		// 	]);
-		// } else {
-		// 	return response()->json([
-		// 		'login' => '0'
-		// 	]);
-		// }
 		$validation = Validator::make($request->all(),[ 
 			'email' => 'required|email',
 			'password' => 'required|string',
@@ -57,7 +48,11 @@ class UserController extends Controller
 		}
 		$user = $request->user();
 		return response()->json([
-			'login' => '1'
+			'login' => '1',
+			'idUser' => (string)$user->id,
+			'avatar' => $user->avatar,
+			'name' => $user->name,
+			'email' => $user->email
 		]);
 	}
 
@@ -65,39 +60,37 @@ class UserController extends Controller
 		$validation = Validator::make($request->all(),[ 
 			'email' => 'required|email|unique:users',
 			'name' => 'required|string',
-			'ic_no' => 'required|string',
-			'is_admin' => 'required',
+			'ic' => 'required|numeric',
 			'password' => 'required|string',
 			'c_password' => 'required|string|same:password',
-			'phone_number' => 'required|string|unique:users',
+			'phone' => 'required|string|unique:users,phone_number',
 		]);
 		if($validation->fails()){
-			return response()->json([
+			return [
 				'success' => 0,
 				'message' => $validation->messages()
-			]);
+			];
 		}
 		$datas = $request->all();
 		$user = new User();
 		$user->name = $datas['name'];
 		$user->email = $datas['email'];
-		$user->ic_no = $datas['ic_no'];
-		$user->is_admin = $datas['is_admin'];
+		$user->ic_no = $datas['ic'];
+		$user->is_admin ='1';
 		$user->password = bcrypt($datas['password']);
-		$user->phone_number = $datas['phone_number'];
+		$user->phone_number = $datas['phone'];
 		$user->save();
 		return response()->json([
 			'success' => $user->id
 		]);
 	}
 
-	public function update(Request $request, $id) {
+	public function update(Request $request) {
 		$validation = Validator::make($request->all(),[
-			'email' => 'required|email|unique:users',
+			'email' => 'required|email',
 			'name' => 'required|string',
-			'ic_no' => 'required|digits',
-			'is_admin' => 'required',
-			'phone_number' => 'required|string|unique:users',
+			'ic' => 'required|numeric',
+			'phone' => 'required|string',
 
 		]);
 		if($validation->fails()){
@@ -107,12 +100,13 @@ class UserController extends Controller
 			]);
 		}
 		$datas = $request->all();
+		$user = User::find($datas['id']);
 		$user->name = $datas['name'];
 		$user->email = $datas['email'];
-		$user->ic_no = $datas['ic_no'];
-		$user->is_admin = $datas['is_admin'];
-		$user->phone_number = $datas['phone_number'];
+		$user->ic_no = $datas['ic'];
+		$user->phone_number = $datas['phone'];
 		$user->save();
+		return response()->json($request->all());
 		return response()->json([
 			'success' => $user->id
 		]);
@@ -150,6 +144,23 @@ class UserController extends Controller
 		$user->save();
 		return response()->json([
 			'success' => $user->id
+		]);
+	}
+
+	public function detail(Request $request) {
+		$user = User::find($request->input('id'));
+		if(!$user) {
+			return [
+				'error' => 1,
+			];
+		}
+		return response()->json([
+			'name' => $user->name,
+			'email' => $user->email,
+			'phone' => $user->phone_number,
+			'ic' => $user->ic_no,
+			'avatar' => $user->avatar,
+			'id' => $user->id
 		]);
 	}
 }
