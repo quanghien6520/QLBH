@@ -56,7 +56,8 @@ class GoodsController extends Controller
                 'id' => $goods->id,
                 'name' => $goods->name,
                 'subtitle' => $goods->unit,
-                'price' => number_format($goods->price)
+                'price' => number_format($goods->price),
+                'avatarUrl' => empty($goods->Image)?url('image/default.png'):url($goods->Image)
             ];
             $resArray[] = $nestData;
         }
@@ -76,7 +77,8 @@ class GoodsController extends Controller
                 'name' => $goods->name,
                 'subtitle' => $goods->unit,
                 'price' => number_format($goods->price),
-                'amount' => $Amount
+                'amount' => $Amount,
+                'avatarUrl' => empty($goods->Image)?url('image/default.png'):url($goods->Image)
             ];
             $resArray[] = $nestData;
         }
@@ -85,20 +87,20 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function show(Request $request, $id) {
+    public function show(Request $request) {
         $datas = $request->all();
-        $goods = goods::find($id);
+        $goods = goods::find($datas['id']);
         $Amount= DB::table('totalamount')->where('id',$goods->id)->value('Amount');
         $nestData = [
             'id' => $goods->id,
             'name' => $goods->name,
             'subtitle' => $goods->unit,
             'price' => number_format($goods->price),
-            'amount' => $Amount
+            'amount' => $Amount,
+            'period' => (string)$goods->period,
+            'image' => empty($goods->Image)?url('image/default.png'):url($goods->Image)
         ];
-        return response()->json([
-            'goods' => $nestData
-        ]);
+        return $nestData;
     }
 
     public function test() {
