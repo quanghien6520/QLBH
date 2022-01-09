@@ -41,8 +41,6 @@ class ProviderController extends Controller
     public function get(Request $request)
     {
         $allProvider = provider::all();
-        return response()->json([
-            'allProvider' => $allProvider
-        ]);
+        return $allProvider;
     }
 }

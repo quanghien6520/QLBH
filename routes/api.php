@@ -23,14 +23,14 @@ Route::group(['prefix' => 'goods-type'], function () {
   Route::post('store', 'GoodsTypeController@store');
   Route::post('update/{id}', 'GoodsTypeController@update');
   Route::post('destroy/{id}', 'GoodsTypeController@destroy');
-  Route::get('get', 'GoodsTypeController@get');
+  Route::post('get', 'GoodsTypeController@get');
 });
 
 Route::group(['prefix' => 'provider'], function () {
   Route::post('store', 'ProviderController@store');
   Route::post('update/{id}', 'ProviderController@update');
   Route::post('destroy/{id}', 'ProviderController@destroy');
-  Route::get('get', 'ProviderController@get');
+  Route::post('get', 'ProviderController@get');
 });
 
 Route::group(['prefix' => 'goods'], function () {

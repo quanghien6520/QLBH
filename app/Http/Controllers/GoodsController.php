@@ -5,20 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\goods;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class GoodsController extends Controller
 {
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'subtitle' => 'required|string|max:255',
+            'period' => 'required|numeric',
+            'provider' => 'required|numeric',
+        ]);
         $datas = $request->all();
         $goods = new goods();
-        $goods->barcode = $datas['barcode'];
         $goods->name = $datas['name'];
+        $goods->barcode = Str::uuid()->toString();
         $goods->price = $datas['price'];
-        $goods->unit = $datas['unit'];
-        $goods->type = $datas['type'];
-        $goods->provider = $datas['provider'];
+        $goods->unit = $datas['subtitle'];
+        $goods->Image = $datas['image'];
         $goods->period = $datas['period'];
+        $goods->provider = $datas['provider'];
+        $goods->type = $datas['type'];
         $goods->save();
         return response()->json([
             'success' => $goods->id
@@ -27,18 +36,25 @@ class GoodsController extends Controller
 
     public function update(Request $request,$id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required',
+            'subtitle' => 'required|string|max:255',
+            'period' => 'required|numeric',
+            'provider' => 'required|numeric',
+        ]);
         $datas = $request->all();
         $goods = goods::find($id);
-        $goods->barcode = $datas['barcode'];
         $goods->name = $datas['name'];
-        $goods->price = $datas['price'];
-        $goods->unit = $datas['unit'];
-        $goods->type = $datas['type'];
-        $goods->provider = $datas['provider'];
+        $goods->price = strpos($datas['price'],',') !== false?str_replace(',','',$datas['price']):strpos($datas['price'],',');
+        $goods->unit = $datas['subtitle'];
+        $goods->Image = $datas['image'];
         $goods->period = $datas['period'];
+        $goods->provider = $datas['provider'];
+        $goods->type = $datas['type'];
         $goods->save();
         return response()->json([
-            'success' => ($goods->save())?1:0
+            'success' => $goods->id
         ]);
     }
 
@@ -98,7 +114,9 @@ class GoodsController extends Controller
             'price' => number_format($goods->price),
             'amount' => $Amount,
             'period' => (string)$goods->period,
-            'image' => empty($goods->Image)?url('image/default.png'):url($goods->Image)
+            'image' => empty($goods->Image)?url('image/default.png'):url($goods->Image),
+            'type' => $goods->type,
+            'provider' => $goods->provider,
         ];
         return $nestData;
     }

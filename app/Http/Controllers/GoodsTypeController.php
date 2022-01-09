@@ -37,9 +37,6 @@ class GoodsTypeController extends Controller
 
     public function get(Request $request)
     {
-        $allType = goods_type::all();
-        return response()->json([
-            'allType' => $allType
-        ]);
+        return goods_type::all();
     }
 }
