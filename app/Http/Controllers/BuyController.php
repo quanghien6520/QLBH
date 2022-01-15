@@ -14,10 +14,10 @@ class BuyController extends Controller
     {
         $datas = $request->all();
         $bill = Str::uuid()->toString();
-        foreach ($datas as $value) {
+        foreach ($datas['list'] as $value) {
             $buy = new buy();
             $buy->id_goods = $value['id'];
-            $buy->id_user = '1';
+            $buy->id_user = $datas['user'];
             $buy->amount = $value['number'];
             $buy->id_bill = $bill;
             $buy->date_made = $value['dateMade'];

@@ -14,10 +14,10 @@ class SellController extends Controller
     public function store(Request $request) {
         $datas = $request->all();
         $bill = Str::uuid()->toString();
-        foreach ($datas as $value) {
+        foreach ($datas['list'] as $value) {
             $sell = new sell();
             $sell->id_goods = $value['id'];
-            $sell->id_user = '1';
+            $sell->id_user = $datas['user'];
             $sell->amount = $value['number'];
             $sell->id_bill = $bill;
             $sell->save();
@@ -37,7 +37,8 @@ class SellController extends Controller
                 'name' => $goods->name,
                 'subtitle' => $goods->unit,
                 'price' => number_format($goods->price),
-                'amount' => $goods->Amount
+                'amount' => $goods->Amount,
+                'avatarUrl' => empty($goods->Image)?url('image/default.png'):url($goods->Image)
             ];
             $resArray[] = $nestData;
         }

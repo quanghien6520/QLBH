@@ -35,6 +35,7 @@ Route::group(['prefix' => 'provider'], function () {
 
 Route::group(['prefix' => 'goods'], function () {
   Route::post('store', 'GoodsController@store');
+  Route::get('detail/{id}', 'GoodsController@show');
   Route::post('detail', 'GoodsController@show');
   Route::post('update/{id}', 'GoodsController@update');
   Route::post('destroy/{id}', 'GoodsController@destroy');

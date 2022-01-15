@@ -50,7 +50,7 @@ class UserController extends Controller
 		return response()->json([
 			'login' => '1',
 			'idUser' => (string)$user->id,
-			'avatar' => $user->avatar,
+			'avatar' => !empty($user->avatar)?$user->avatar:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png',
 			'name' => $user->name,
 			'email' => $user->email
 		]);
