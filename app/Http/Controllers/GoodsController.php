@@ -21,7 +21,7 @@ class GoodsController extends Controller
         $datas = $request->all();
         $goods = new goods();
         $goods->name = $datas['name'];
-        $goods->barcode = Str::uuid()->toString();
+        $goods->barcode = $this->getUUID();
         $goods->price = $datas['price'];
         $goods->unit = $datas['subtitle'];
         $goods->Image = $datas['image'];
@@ -32,6 +32,10 @@ class GoodsController extends Controller
         return response()->json([
             'success' => $goods->id
         ]);
+    }
+
+    private function getUUID() {
+        return explode('-',Str::uuid()->toString())[0];
     }
 
     public function update(Request $request,$id)
@@ -123,5 +127,21 @@ class GoodsController extends Controller
 
     public function test() {
         dd(DB::table('totalamount')->where('id',11)->first());
+    }
+
+    public function showByCode($id) {
+        $goods = DB::table('totalamount')->where('barcode',$id)->first();
+        if($goods) {
+            return [
+                'success' => '1',
+                'name' => $goods->name,
+                'price' => $goods->price,
+                'amount' => $goods->Amount
+            ];
+        } else {
+            return [
+                'success' => '0'
+            ];
+        }
     }
 }
