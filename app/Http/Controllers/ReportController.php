@@ -21,6 +21,7 @@ class ReportController extends Controller
     }
 
     public function listBill() {
+        //Lay thong tin tu DB show list hoa don
         $buyBill = buy::all()->groupBy('id_bill');
         $sellBill = sell::all()->groupBy(('id_bill'));
         return view('pages.list-bill',[
@@ -30,6 +31,7 @@ class ReportController extends Controller
     }
 
     public function buyBillDetail($id) {
+        //lay thong tin san pham mua trong hoa don thong qua id
         $buyBill = buy::where('id_bill',$id)->get();
         return view('pages.bill-detail',[
             'type' => 'buy',
@@ -38,6 +40,8 @@ class ReportController extends Controller
     }
 
     public function sellBillDetail($id) {
+
+        //
         $sellBill = sell::where('id_bill',$id)->get();
         return view('pages.bill-detail',[
             'type' => 'sell',
